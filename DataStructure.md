@@ -900,7 +900,7 @@ public:
     若 nextval[j] < 0，说明子串需要重头匹配，子串主串索引都进行右移，i++, j++
     若此时子串剩余长度大于主串剩余长度，不必再进行匹配
     退出外循环后，根据 j 的值判断是否匹配成功
-    若匹配成功，应有 j >= s_str.length()，返回匹配到的下标 (j = s_str.length())，否则返回 -1
+    若匹配成功，应有 j >= s_str.length()，返回匹配到的下标 (i - s_str.length())，否则返回 -1
 */
 int KMP(string m_str, string s_str) {
     int i, j, *next, *nextval;
@@ -934,7 +934,7 @@ int KMP(string m_str, string s_str) {
             break;
     }
     // 根据 j 的值判断是否匹配成功
-    // 若匹配成功，应有 j >= s_str.length()，返回匹配到的下标 (j = s_str.length())，否则返回 -1
+    // 若匹配成功，应有 j >= s_str.length()，返回匹配到的下标 (i - s_str.length())，否则返回 -1
     return j >= s_str.length() ? (i - s_str.length()) : -1;
 }
 ```

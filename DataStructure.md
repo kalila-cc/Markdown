@@ -881,68 +881,61 @@ public:
 ### KMP算法
 
 ```c++
-int KMP(string mainstr, string substr) {
-    /*
-        index 存储需要返回的匹配下标，若为 -1 说明匹配失败
-        next[] 存储 KMP 的匹配失败移动对应新下标，nextval[] 为 next[] 的改良版
-    */
-    int index = -1;
-    int *next = new int[substr.size()];
-    int *nextval = new int[substr.size()];
-    /*
-        计算 next[] 的时候，substr[i] 匹配失败移动的对应的新下标 只看前 [0, i-1] 的字符 
-        next[]和 nextval[] 的算法步骤：
-        1) 初始化 next[0] = nextval[0] = -1;
-        2) 从 substr[1] 开始外循环以计算对应移动下标，直到最后一个字符
-        3) 开始内循环
-        4) 初始化 j 为 i-1
-        5) 只要 next[j] >= 0 且 substr[i-1] != substr[j]，就令 j = next[j]
-        6) 退出内循环
-        7) 令 next[i] = next[j] + 1
-        8) 若 substr[i] == substr[next[i]]，令 nextval[i] = nextval[next[i]]
-           否则直接令 nextval[i] = next[i]
-        9) 重新开始外循环进行下一个字符的移动下标计算，直到计算完所有字符
-    */
-    next[0] = nextval[0] = -1;
-    for (int j, i = 1; i < substr.size(); i++) {
-        j = i - 1;
-        while (next[j] >= 0 && substr[i - 1] != substr[next[j]])
-            j = next[j];
-        next[i] = next[j] + 1;
-        if (substr[i] == substr[next[i]])
-            nextval[i] = nextval[next[i]];
-        else
-            nextval[i] = next[i];
-    }
-    /* 开始利用 nextval[] 进行匹配，初始化主串和子串的当前索引值 i = 0 和 j = 0 */
-    for (int i = 0, j = 0; i < mainstr.size(); i++) {
-        /* 当在允许范围内，主串和子串匹配时，匹配继续，i 和 j 同时右移 */
-        while (i < mainstr.size() && j < substr.size() && mainstr[i] == substr[j])
-            i++, j++;
-        if (j >= substr.size()) {
-            /* 无论如何，子串一旦匹配完了，必定匹配成功，匹配成功的位置是 i - j */
-            index = i - j;
-            break;
-        } else if (i >= mainstr.size()) {
-            /* 还没匹配完子串，但主串就结束了，故匹配失败 */
-            break;
-        } else {
-            /* 主串没匹配完，子串也是，所以更新 j，继续匹配 */
-            j = nextval[j];
-            /*
-                更新完后，若 nextval[j] == -1，说明 mainstr[i] 已没必要匹配，直接在外层循环 i++
-                但如果不为 -1，需要 i-- 来抵消外层循环的 i++
-            */
-            if (j == -1)
-                j = 0;
-            else
-                i--;
-        }
-    }
-    delete[] next;
-    delete[] nextval;
+/*
+    KMP算法：
+    通过计算子串在匹配失败后移动的位置 nwxt[] 和 nextval[] 来优化匹配过程
     
-    return index;
+    next[]/nextval[] 计算过程：
+    初始化子串第一个字符的移动位置为 -1，代表子串整体右移重新匹配
+    初始化 j = i-1 代表 [i-1] 的索引
+    计算第 j 个字符的移动位置时，需要看第 j 个字符的移动位置所在处，即 next[j]
+    若 next[j] 所在字符与 [i-1] 相同，令 j = next[j]，直到字符不同或 next[j] < 0
+    令 next[i] = next[j] + 1
+    若 [i] 与 [next[i]] 相比，若字符不同，直接令 nextval[i] = next[i]，否则取 nextval[next[i]]
+
+    子串匹配过程：
+    初始化 i = j = 0 为主串子串的索引
+    每次内循环匹配一个字符成功则 i++, j++
+    若 j 不小于子串长度，说明匹配成功，退出外循环
+    若 nextval[j] < 0，说明子串需要重头匹配，子串主串索引都进行右移，i++, j++
+    若此时 i - j 大于主串子串长度之差，不必再进行匹配
+    退出外循环后，根据 j 的值判断是否匹配成功
+    若匹配成功，应有 j >= s_str.length()，返回匹配到的下标 (j = s_str.length())，否则返回 -1
+*/
+int KMP(string m_str, string s_str) {
+    int i, j, *next, *nextval;
+    // 主串长度小于子串长度，直接返回 -1
+    if (m_str.length() < s_str.length())
+        return -1;
+    // 初始化 next[] 和 nextval[]，同时置 next[0] = nextval[0] = -1，标志着主串子串索引需要进行右移
+    next = new int[s_str.length()];
+    nextval = new int[s_str.length()];
+    next[0] = nextval[0] = -1;
+    // 计算 next[] 和 nextval[]，初始化 i = j = 0 为主串子串的索引
+    for (i = 1; i < s_str.length(); i++) {
+        for (j = i - 1; next[j] >= 0 && s_str[i - 1] != s_str[next[j]]; j = next[j])
+            continue;
+        next[i] = next[j] + 1;
+        nextval[i] = s_str[i] == s_str[next[i]] ? nextval[next[i]] : next[i];
+    }
+    // 匹配子串
+    for (i = j = 0; i < m_str.length() && j < s_str.length();) {
+        // 每次内循环匹配一个字符成功则 i++, j++
+        while (i < m_str.length() && j < s_str.length() && m_str[i] == s_str[j])
+            i++, j++;
+        // 若 j 不小于子串长度，说明匹配成功，退出外循环
+        if (j >= s_str.length())
+            break;
+        // 若 nextval[j] < 0，说明子串需要重头匹配，子串主串索引都进行右移，i++, j++
+        if ((j = nextval[j]) < 0)
+            i++, j++;
+        // 若此时 i - j 大于主串子串长度之差，不必再进行匹配
+        if (i - j > m_str.length() - s_str.length())
+            break;
+    }
+    // 根据 j 的值判断是否匹配成功
+    // 若匹配成功，应有 j >= s_str.length()，返回匹配到的下标 (j = s_str.length())，否则返回 -1
+    return j >= s_str.length() ? (i - s_str.length()) : -1;
 }
 ```
 

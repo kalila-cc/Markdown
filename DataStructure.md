@@ -2,6 +2,37 @@
 
 # 数据结构
 
+## 基本概念和术语
+
+### 结构类型
+
++ 集合
++ 线性结构
++ 树形结构
++ 图状结构/网状结构
+
+### 物理结构（存储结构）
+
++ 顺序存储结构
++ 链式存储结构
+
+### 算法
+
++ 特性
+  + 有穷性
+  + 确定性
+  + 可行性
+
++ 要求
+  + 正确性
+  + 可读性
+  + 健壮性
+  + 效率与底存储量需求
+
++ 度量
+  + 时间复杂度
+  + 空间复杂度
+
 ## 线性表
 
 ### 顺序表
@@ -970,10 +1001,7 @@ public:
         通过二叉树的广度优先遍历顺序进行输入以创建顺序二叉树
         传入的 _null_element 和 _ends 分别代表空结点标志和输入结束标志，这两个参数不是必需的
     */
-    SeqBinaryTree(T _null_element, T _end) {
-        length = 0;
-        null_element = _null_element;
-        ends = _end;
+    SeqBinaryTree(T null_element, T ends): length(0), null_element(null_element), ends(ends) {
         root = new T[MAX_LEN];
         T data;
         while (true) {
@@ -1038,9 +1066,7 @@ struct Node {
     T data;
     Node *lchild, *rchild;
     /* data 域存数据，lchild 和 rchild 域存左右子结点的地址 */
-    Node() {
-        lchild = rchild = NULL;
-    }
+    Node(): lchild(NULL), rchild(NULL) {}
 };
 template <typename T>
 class BinaryTree {
@@ -1057,9 +1083,7 @@ public:
         链式二叉树的创建将会调用私有函数 _init() 进行递归创建
         传入的 _null_element 代表空结点标志，这个参数不是必需的
     */
-    BinaryTree(T __ull_element) {
-        length = 0;
-        null_element = _null_element;
+    BinaryTree(T null_element): length(0), null_element(null_element) {
         T data;
         cin >> data;
         if (data != null_element) {
@@ -1149,11 +1173,7 @@ struct Node {
     	data 域存数据，lchild 和 rchild 域存左右子结点的地址
     	coded 标志该结点是否在计算编码子树时被合并过
     */
-    Node() {
-        data = '\0';
-        coded = false;
-        parent = lchild = rchild = NULL;
-    }
+    Node(): data('\0'), coded(false), parent(NULL), lchild(NULL), rchild(NULL) {}
 };
 class HuffmanTree {
     int num;
@@ -1169,8 +1189,7 @@ public:
     	[0, num-1] 存储原始结点，[num, 2*num-2] 存储新结点，[2*num-2] 最终成为根结点
     	赫夫曼树建立后，调用 _initCode() 建立 data2code 映射表
     */
-    HuffmanTree(char *info, double *weights, int n) {
-        num = n;
+    HuffmanTree(char *info, double *weights, int num): num(num) {
         nodes = new Node[2 * num - 1];
         for (int i = 0;i < num; i++) {
             nodes[i].data = info[i];
@@ -1288,9 +1307,7 @@ struct Node {
     T data;
     Node *lchild, *rchild;
     /* data 域存数据，lchild 和 rchild 域存左右子结点的地址 */
-    Node() {
-        lchild = rchild = NULL;
-    }
+    Node(): lchild(NULL), rchild(NULL) {}
 };
 template <typename T>
 class BinaryTree {
@@ -1307,9 +1324,7 @@ public:
         链式二叉树的创建将会调用私有函数 _initBinaryTree() 或 _initTree() 进行递归创建
         传入的 _null_element 代表空结点标志，这个参数不是必需的
     */
-    BinaryTree(T _null_element) {
-        length = 0;
-        null_element = _null_element;
+    BinaryTree(T null_element): length(0), null_element(null_element) {
         T data;
         cin >> data;
         if (data != null_element) {
@@ -1319,9 +1334,7 @@ public:
             _initBinaryTree(root);
         }
     }
-    BinaryTree(T _null_element, int branch) {
-        length = 0;
-        null_element = _null_element;
+    BinaryTree(T null_element, int branch): length(0), null_element(null_element) {
         T data;
         cin >> data;
         if (data != null_element) {
@@ -1443,11 +1456,10 @@ public:
         最后通过将第 i+1 棵树连接到第 i 棵树 的右支
         就能将整个森林转化为一棵二叉树
     */
-    Forest(T _null_element, int branch, int tree) {
-        tree_num = tree;
+    Forest(T null_element, int branch, int tree_num): tree_num(tree_num) {
         forest = new BinaryTree<T>*[tree_num];
         for (int i = 0; i < tree_num; i++)
-            forest[i] = new BinaryTree<T>(_null_element, branch);
+            forest[i] = new BinaryTree<T>(null_element, branch);
         root = forest[0]->getRoot();
         Node<T> *p = root;
         for (int i = 1; i < tree_num; i++) {
@@ -1518,14 +1530,11 @@ class Graph {
 public:
     /*
     	通过输入 顶点数目、顶点信息、边数目，边信息 以创建图
-    	_mode 应为 "DIGRAPH" 或 "UNDIGRAPH"，默认为无权图
+    	mode 应为 "DIGRAPH" 或 "UNDIGRAPH"，默认为无权图
     	若为带权图，则初始化邻接矩阵所有关系为 INF，否则直接初始化为 0
     */
-    Graph(int n, string _mode, bool _weighted = false) {
+    Graph(int num, string mode, bool weighted = false): num(num), mode(mode), weighted(weighted) {
         connectedComponentNum = 0;
-        num = n;
-        weighted = _weighted;
-        mode = _mode;
         INF = 1 << (sizeof(int) * 8 - 1) - 1;
         visited = new bool[num];
         vertex = new string[num];
@@ -1561,9 +1570,8 @@ public:
     	通过输入 顶点数目、顶点信息、邻接矩阵信息 以创建图
     	由于是直接输入邻接矩阵信息，该构造函数只能创建无权图，且也不需要初始化邻接矩阵为 0
     */
-    Graph(int n) {
+    Graph(int num): num(num) {
         connectedComponentNum = 0;
-        num = n;
         INF = 1 << (sizeof(int) * 8 - 1) - 1;
         visited = new bool[num];
         vertex = new string[num];
@@ -1650,7 +1658,7 @@ public:
     	通过遍历直至所有顶点被访问后，可求得连通分量
     */
     int getConnectedComponentNum() {
-        this->traverse("DFS", true);
+        traverse("DFS", true);
         return connectedComponentNum;
     }
     /*
@@ -1753,11 +1761,9 @@ public:
     /*
     	通过 顶点数目、有向性、以及后续输入的带权边建立图
     	flag 是用于 dfs 时检测是否成环的标记，visited[] 标记顶点是否被访问过
-    	markMatrix[][] 记录某路径是否被标记，_mode 应为 "UNDIGRAPH" 或 "DIGRAPH"
+    	markMatrix[][] 记录某路径是否被标记，mode 应为 "UNDIGRAPH" 或 "DIGRAPH"
     */
-    Graph(int n, string _mode) {
-        num = n;
-        mode = _mode; 
+    Graph(int num, string mode): num(num) mode(mode) {
         INF = 1 << (sizeof(int) * 8 - 1) - 1;
         visited = new bool[num];
         vertex = new string[num];
@@ -2177,7 +2183,7 @@ public:
         for (m = (n - 1) / 2; l <= r; m = (l + r) / 2) {
             if (ol[m] == data)
                 return m;
-            else if (ol[m] < data)
+            if (ol[m] < data)
                 l = m + 1;
             else
                 r = m - 1;
@@ -2292,7 +2298,7 @@ public:
     }
     // 在二叉排序树中删除给定元素，若不存在则二叉排序树结构不变
     void _remove(T data, Node<T> *node) {
-        // 若当前节点数据就是所要找的数据
+        // 若当前节点数据不是所要找的数据
         if (node->data != data) {
             // 若当前节点数据小于所要找的数据，且存在左孩子，递归尝试删除左孩子节点
             if (data < node->data && node->lchild)
@@ -2300,7 +2306,7 @@ public:
             // 否则，若当前节点数据大于所要找的数据，且存在右孩子，递归尝试删除右孩子节点
             else if (data > node->data && node->rchild)
                 _remove(data, node->rchild);
-        // 否则，当前节点数据不是所要找的数据
+        // 否则，当前节点数据是所要找的数据
         } else {
             // 若不存在左右孩子
             if (node->lchild == NULL && node->rchild == NULL) {
@@ -2361,7 +2367,7 @@ public:
                 node->lchild->parent = node;
             }
         // 否则，若传入的数据大于等于当前节点的数据
-        } else if (data >= node->data) {
+        } else {
             // 若右孩子存在，递归尝试从右孩子节点处开始插入数据
             if (node->rchild != NULL) {
                 _insert(data, node->rchild);
@@ -2607,7 +2613,7 @@ void shell_sort(int *arr, int n) {
             // 此处属于直接插入排序，原理类似直接插入排序
             for (j = i + gap; j < n; j += gap) {
                 t = arr[j]; 
-                for (k = j - gap; arr[k] > t && k >= i; k -= gap)
+                for (k = j - gap; k >= i && arr[k] > t; k -= gap)
                     arr[k + gap] = arr[k];
                 arr[k + gap] = t;
             }

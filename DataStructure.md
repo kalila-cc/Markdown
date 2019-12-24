@@ -4,12 +4,14 @@
 
 ## 基本概念和术语
 
-### 结构类型
+### 逻辑结构
 
-+ 集合
 + 线性结构
-+ 树形结构
-+ 图状结构/网状结构
+  + 线性表，栈，队列，串等
++ 非线性结构
+  + 集合
+  + 树形结构
+  + 图形结构/网状结构
 
 ### 物理结构（存储结构）
 
@@ -1957,11 +1959,9 @@ class Graph {
 public:
     /*
     	通过输入 顶点数目、顶点信息、边数目，边信息 以创建带权图
-    	_mode 应为 "DIGRAPH" 或 "UNDIGRAPH"，带权图的权值初始化为无穷大
+    	mode 应为 "DIGRAPH" 或 "UNDIGRAPH"，带权图的权值初始化为无穷大
     */
-    Graph(int n, string _mode) {
-        num = n;
-        mode = _mode; 
+    Graph(int num, string mode): num(num), mode(mode) {
         INF = 1 << (sizeof(int) * 8 - 1) - 1;
         visited = new bool[num];
         vertex = new string[num];
@@ -2124,6 +2124,95 @@ private:
     }
 };
 ```
+
+### 拓扑排序
+
+```c++
+// AOV网(Activity On Vertex Network)
+class AOV {
+	int vertex_num, **adjacencyMatrix;
+	string *vertex;
+public:
+    // 通过邻接矩阵存储有向路径
+	AOV(int n): vertex_num(n) {
+		adjacencyMatrix = new int*[vertex_num];
+		vertex = new string[vertex_num];
+		for (int i = 0; i < vertex_num; i++) {
+			cin >> vertex[i];
+			adjacencyMatrix[i] = new int[vertex_num];
+			for (int j = 0; j < vertex_num; j++)
+				adjacencyMatrix[i][j] = 0;
+		}
+		int vi, vj, edge_num;
+		string v1, v2;
+		cin >> edge_num;
+		for (int i = 0; i < edge_num; i++) {
+			vi = vj = 0;
+			cin >> v1 >> v2;
+			while (vertex[vi] != v1)
+				vi++;
+			while (vertex[vj] != v2)
+				vj++;
+			adjacencyMatrix[vi][vj] = 1;
+		}
+	}
+	~AOV() {
+		for (int i = 0; i < vertex_num; i++)
+			delete[] adjacencyMatrix[i];
+		delete[] adjacencyMatrix;
+		delete[] vertex;
+	}
+    // 拓扑排序：每次将最小序号的入度为 0 的点输出，然后断开其与其他顶点的连接，重复至无入度为 0 的顶点
+	void topological_sort() {
+        // 使用 mark 复制 adjacencyMatrix 的内容，防止操作中改动邻接矩阵
+		int **mark;
+		mark = new int*[vertex_num];
+		for (int i = 0; i < vertex_num; i++) {
+			mark[i] = new int[vertex_num];
+			for (int j = 0; j < vertex_num; j++)
+				mark[i][j] = adjacencyMatrix[i][j];
+		}
+        // 通过 ctr 进行计数，当计数 vertex_num 次完成拓扑排序
+		int ctr = 0;
+		for (int i = 0; ctr < vertex_num; i = (i + 1) % vertex_num) {
+            // 计算 [i] 的入度
+			int _sum = 0;
+			for (int j = 0; j < vertex_num; j++)
+				_sum += mark[j][i];
+            // 若 [i] 的入度不为零，输出顶点，并断开其与其他顶点的连接，计数器 +1
+			if (!_sum) {
+				cout << vertex[i] << " ";
+				for (int j = 0; j < vertex_num; j++)
+					mark[i][j] = 0;
+				ctr++;
+			}
+		}
+		cout << endl;
+        // 释放 mark 的临时占用的空间
+		for (int i = 0; i < vertex_num; i++)
+			delete[] mark[i];
+		delete[] mark;
+	}
+};
+```
+
+### 关键路径
+
+关键路径是指设计中从输入到输出经过的延时最长的逻辑路径
+
+在计算时，通过 *ve, *vl, *ae, *al 分别记录事件/活动的最早/最晚开始时间来计算关键路径
+
+通过以下恒等式进行计算：
+
+$ve[j]=max(ve[i]+w_{ij}),<i,j> \in S$
+
+$vl[i]=min(vl[j]-w_{ij}),<i,j> \in S$
+
+$ae[k]=ve[i],a[k]=<i,j>$
+
+$al[k]=vl[j]-w_{ij},a[k]=<i,j>$
+
+关键活动即为满足 $ae[k]=al[k] \space (或al[k]-ae[k]=0)$ 的顶点代表的活动
 
 ## 查找
 
@@ -2391,6 +2480,74 @@ public:
 ```
 
 ### 哈希表
+
+#### 链地址法
+
+```c++
+struct Node {
+	int data;
+	Node *next;
+	Node(): data(0), next(NULL) {}
+};
+// 哈希表类，头节点 *nodes，哈希函数取模的基数 KEY
+class HashTable {
+	Node *nodes;
+	int KEY;
+public:
+    // 通过 原始数据 *data，数据个数 n 进行哈希表的构造
+    // 构造原理：通过哈希函数确定插入的节点位置，且在链表头部插入最新数据
+	HashTable(int *data, int n) {
+		KEY = 11;
+		nodes = new Node[KEY];
+		for (int i = 0; i < n; i++) {
+			int k = Hash(data[i]);
+			Node *node = new Node();
+			node->data = data[i];
+			node->next = nodes[k].next;
+			nodes[k].next = node;
+		}
+	}
+	~HashTable() {
+		for (int i = 0; i < KEY; i++) {
+			Node *p, *trash = nodes[i].next;
+			while (trash) {
+				p = trash->next;
+				delete trash;
+				trash = p;
+			}
+		}
+		delete[] nodes;
+	}
+    // 显示哈希表的内容
+	void disp() {
+		for (int i = 0; i < KEY; i++) {
+			Node *p = nodes + i;
+			cout << "KEY " << i << " : ";
+			while (p->next) {
+				cout << p->next->data << " ";
+				p = p->next;
+			}
+			cout << endl;
+		}
+	}
+    // 在哈希表中查找某元素是否存在
+	bool search(int data) {
+		int k = Hash(data);
+		Node *p = nodes[k].next;
+		while (p) {
+			if (p->data == data)
+				return true;
+			p = p->next;
+		}
+		return false;
+	}
+private:
+    // 哈希函数
+	int Hash(int v) {
+		return v % KEY;
+	}
+};
+```
 
 #### 线性探测再散列
 
@@ -2855,3 +3012,28 @@ void counting_sort(int *arr, int n) {
 }
 ```
 
+## 数组和广义表
+
+### 数组
+
++ 行序为主序：$for\space a[m][n]:\space LOC(a_{ij})=LOC(a_{00})+(i*n+j)*L\space (0 \leq i,j)$
++ 列序为主序：$for\space a[m][n]:\space LOC(a_{ij})=LOC(a_{00})+(i+j*m)*L\space (0 \leq i,j)$
+
+### 矩阵的压缩存储
+
++ 下三角矩阵存储：$for \space a[m][n]:\space LOC(a_{ij})=LOC(a_{00})+(\frac{i(i+1)}{2}+j)*L\space (0 \leq i,j)$
+
++ 稀疏矩阵：
+
+  + $\delta=\frac{t}{m*n} \leq 0.05$
+
+  + | 行   | 列   | 值   |
+    | ---- | ---- | ---- |
+    | $i$  | $j$  | $v$  |
+
+### 广义表
+
++ 结构
+  + 元素：原子或子表
+  + 表头，表的首个元素
+  + 表尾，除去表头的整个广义表，表尾一定是广义表

@@ -29,7 +29,7 @@
   + 正确性
   + 可读性
   + 健壮性
-  + 效率与底存储量需求
+  + 效率与低存储量需求
 
 + 度量
   + 时间复杂度
@@ -1083,7 +1083,7 @@ public:
         root 代表二叉树的根结点，null_element 代表空结点标志，length 存储二叉树长度
         通过二叉树的先序遍历顺序进行输入以创建链式二叉树
         链式二叉树的创建将会调用私有函数 _init() 进行递归创建
-        传入的 _null_element 代表空结点标志，这个参数不是必需的
+        传入的 null_element 代表空结点标志，这个参数不是必需的
     */
     BinaryTree(T null_element): length(0), null_element(null_element) {
         T data;
@@ -1324,7 +1324,7 @@ public:
         root 代表二叉树的根结点，null_element 代表空结点标志，length 存储二叉树长度
         通过二叉树的先序遍历顺序进行输入以创建链式二叉树
         链式二叉树的创建将会调用私有函数 _initBinaryTree() 或 _initTree() 进行递归创建
-        传入的 _null_element 代表空结点标志，这个参数不是必需的
+        传入的 null_element 代表空结点标志，这个参数不是必需的
     */
     BinaryTree(T null_element): length(0), null_element(null_element) {
         T data;

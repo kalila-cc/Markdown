@@ -634,8 +634,8 @@ public:
    // 返回 pair 对象
    template <class _Tl, class _T2>
    pair<_T1, _T2> make_pair(const _T1 &__a, const _T2 &__b);
-```
-   
+   ```
+
 4. 函数对象类模板
 
    | 函数对象类模板      | 功能             |
@@ -811,7 +811,7 @@ public:
   
 + `<sstream>`
 
-  包含`istringstream, ostringstream`类，可以使用`<<, >>`进行流输入输出，通过`str()`成员函数能将输出到 ostringstream 对象中的内容提取出来
+  包含`istringstream, ostringstream`类，可以使用`<<, >>`进行流输入输出，通过`str()`成员函数能将输出到 `ostringstream`对象中的内容提取出来
 
 ## C库
 

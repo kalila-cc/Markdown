@@ -1,6 +1,65 @@
-[TOC]
+- [Java](#java)
+  - [数据类型](#数据类型)
+  - [流程控制](#流程控制)
+  - [面向对象编程](#面向对象编程)
+    - [类](#类)
+    - [转型](#转型)
+    - [多态](#多态)
+    - [抽象类](#抽象类)
+    - [接口](#接口)
+    - [包](#包)
+    - [模块](#模块)
+  - [异常处理](#异常处理)
+  - [反射](#反射)
+    - [Class类](#class类)
+    - [访问字段](#访问字段)
+    - [调用方法](#调用方法)
+    - [调用构造方法](#调用构造方法)
+    - [获取继承关系](#获取继承关系)
+  - [泛型](#泛型)
+  - [集合](#集合)
+    - [List](#list)
+    - [Map](#map)
+    - [Set](#set)
+    - [Queue](#queue)
+    - [Stack](#stack)
+    - [Iterator](#iterator)
+    - [Collections](#collections)
+  - [IO](#io)
+    - [File](#file)
+    - [InputStream/OutputStream](#inputstreamoutputstream)
+    - [Reader/Writer](#readerwriter)
+    - [PrintStream/PrintWriter](#printstreamprintwriter)
+    - [序列化](#序列化)
+  - [日期与时间](#日期与时间)
+    - [Date/Celendar/TimeZone](#datecelendartimezone)
+    - [LocalDateTime](#localdatetime)
+    - [ZonedDateTime](#zoneddatetime)
+    - [DateTimeFormatter](#datetimeformatter)
+    - [Instant](#instant)
+    - [Duration/Period](#durationperiod)
+    - [转换](#转换)
+  - [正则表达式](#正则表达式)
+    - [匹配规则](#匹配规则)
+    - [相关方法](#相关方法)
+  - [多线程](#多线程)
+  - [标准库](#标准库)
+    - [String](#string)
+    - [StringBuilder](#stringbuilder)
+    - [StringJoiner](#stringjoiner)
+    - [BigInteger](#biginteger)
+    - [BigDecimal](#bigdecimal)
+    - [Math](#math)
+    - [Random/SecureRandom](#randomsecurerandom)
+    - [包装类型](#包装类型)
+    - [枚举类](#枚举类)
+  - [API](#api)
+    - [`java.util.Arrays`](#javautilarrays)
+    - [`java.util.Scanner`](#javautilscanner)
 
-# 数据类型
+# Java
+
+## 数据类型
 
 说明：
 
@@ -22,7 +81,7 @@
 | `boolean` | `1B/4B`  | 单个布尔元素占用`4B`，布尔数组中单个布尔元素占用`1B`         |
 | `String`  | `NaN`    | 长度不可变，可用`null`初始化（与`""`不同），应使用`equals()`判断相等 |
 
-# 流程控制
+## 流程控制
 
 + 包括`if-else, while, do-while, switch-case, break, continue`，用法类似C语言
 + 从`java11`开始，`for`增加了`for each`形式，能够直接迭代可迭代对象的元素，格式为`for (type element : iterator) {...}`
@@ -30,9 +89,9 @@
 + `Lambda`表达式可替代单方法接口，格式为`([参数表]) -> {...}`，若只有一句返回语句，简化为`([参数表]) -> value`，参数表中不需要指定数据类型，单方法接口可用注解`@FunctionalInterface`标记
 + 如果某个方法签名和接口恰好一致，就可以直接传入方法引用，通过`::`引用
 
-# 面向对象编程
+## 面向对象编程
 
-## 类
+### 类
 
 + `class`
   + 用`final`修饰的类不能被继承
@@ -58,25 +117,25 @@
   + 可以在一个构造方法内部通过`this([参数表])`调用另一个构造方法，便于代码复用
   + 派生类的构造函数中必须要通过`super([参数表])`调用基类某个构造函数，不写则默认为`super()`
 
-## 转型
+### 转型
 
 + 向上转型(upcasting)始终是安全的，能够直接利用派生类构造函数创建基类对象
 + 向下转型(downcasting)需要根据当前对象真实类型信息在继承链向上遍历，若发现新对象类型在继承链，则成功转型
 + 可以通过`instanceof`关键字进行类型判断，再进行向下转型
 
-## 多态
+### 多态
 
 + 针对某个类型的方法调用，真正执行的方法取决于运行时期实际类型的方法
 + 通过`@Override`进行方法签名与基类相同的方法的覆写
 + 如果要调用父类的被覆写的方法，可以通过`super`来调用
 
-## 抽象类
+### 抽象类
 
 + 通过`abstract class [类名] {...}`声明抽象类
 + 抽象类中必须存在`[public/protected] abstract [返回值] [函数]([参数表]);`的抽象方法声明
 + 抽象类通过`extend`继承，一次继承只能继承一个抽象类
 
-## 接口
+### 接口
 
 + 接口与抽象类类似，一般不能在接口定义字段，但能定义`static`字段，且只能是`public static final`类型，因此也可以省略该声明，直接通过`[类型] [变量名] = [参数值]`进行定义
 + 接口通过`interface [类名] {...}`声明，通过`implements`实现
@@ -85,7 +144,7 @@
 + 子类接口通过`extend`继承基类接口
 + 从`java8`开始，能够在接口定义默认方法，格式为`default [返回值] [函数] {...}`，子类可以进行选择性覆盖
 
-## 包
+### 包
 
 + 通过`package [包名];`开头表示打包
 + 包作用域包括用`public`、`protected`、`private`修饰的字段和方法
@@ -95,7 +154,7 @@
 + 包名推荐使用倒置的域名
 + 打包`.jar`时，根目录直接放置包，内含`.class`文件
 
-## 模块
+### 模块
 
 + 从`java9`开始，JDK引入了模块（Module），模块以`.jmod`扩展名标识，可在`$JAVA_HOME/jmods`目录下找到
 
@@ -109,7 +168,7 @@
   }
   ```
 
-# 异常处理
+## 异常处理
 
 + Java使用异常来表示错误，并通过`try ... catch`捕获异常，可增加`finally`语句块，无论是否正确都执行该语句块
 
@@ -177,9 +236,9 @@
   └─ TimeoutException
   ```
 
-# 反射
+## 反射
 
-## Class类
+### Class类
 
 + JVM为每个加载的`class`及`interface`创建了对应的`Class`实例来保存`class`及`interface`的所有信息
 + 获取一个`class`对应的`Class`实例后，就可以获取该`class`的所有信息
@@ -187,7 +246,7 @@
 + JVM总是动态加载`class`，可以在运行期根据条件来控制加载class
 + 通过`[类名].class / [实例].getClass() / Class.forName([类名字符串])`获取`Class`实例，通过`==`判断是否为同一个类，通过`instanceOf`判断是否为后者类或其子类
 
-## 访问字段
+### 访问字段
 
 `Class`对象包含以下常用方法：
 
@@ -209,7 +268,7 @@
 | `set()`           | 传入实例和对应类型的字段值，能够重置原来的字段值             |
 | `setAccessible()` | 传入`true`，表示不管字段是不是`public`，一律允许访问，该方法可能失败 |
 
-## 调用方法
+### 调用方法
 
 使用反射调用方法时，仍然遵循多态原则：即总是调用实际类型的覆写方法（如果存在）
 
@@ -233,7 +292,7 @@
 | `invoke()`            | 传入实例和参数值，得到方法调用的返回值，静态方法第一个参数只需传入`null` |
 | `setAccessible()`     | 传入`true`，表示不管方法是不是`public`，一律允许访问，该方法可能失败 |
 
-## 调用构造方法
+### 调用构造方法
 
 调用非`public`的`Constructor`时，必须通过`setAccessible(true)`设置允许访问，`setAccessible(true)`可能会失败
 
@@ -252,7 +311,7 @@
 | --------------- | ------------------------ |
 | `newInstance()` | 传入参数，得到实例返回值 |
 
-## 获取继承关系
+### 获取继承关系
 
 `Class`对象包含以下常用方法：
 
@@ -262,7 +321,7 @@
 | `getInterfaces()`         | 返回当前类直接实现的接口类型，不包括其父类实现的接口类型     |
 | `isAssignableFrom(Class)` | 判断能否向上转型                                             |
 
-# 泛型
+## 泛型
 
 + 通过`class [类名]<[类型符],...>`定义泛型模板，向上转型时，`[类型符]`不能向上转型，但`[类名]`可以
 + 在定义泛型时，声明具体类型后，`new`以后的类型的尖括号中的具体类型可省略
@@ -274,9 +333,9 @@
 + 选择`extends / super`遵循`PECS(Producer Extends Consumer Super)`原则
 + 通过`Array.newInstance(Class, int)`创建`T[]`数组，需要强制转型
 
-# 集合
+## 集合
 
-## List
+### List
 
 + `List`有`ArrayList`与`LinkedList`，优先使用前者，需要`import java.util.List/ArrayList`
 
@@ -298,7 +357,7 @@
   | `sort()`                   | 传入`Comparator`进行排序                                     |
   | `toArray()`                | 传入数组，将元素复制入数组，若大小不足则开新数组存入，反则剩余置`null` |
 
-## Map
+### Map
 
 + 需要`import java.util.Map`，属于键值（key-value）映射表的数据结构，能高效通过`key`快速查找`value`（元素），最常用为`HashMap`，需要`import java.util.HashMap`
 + 通过`entrySet() / keySet() / values()`获得键值对集合（类型为`Map.Entry<K, V>` / 键集合 / 值集合
@@ -313,12 +372,12 @@
 + 如果需要按照键的排序遍历，可选`TreeMap`，键的类型必须实现`Comparable<K>`接口或传入自定义比较算法`conparator`，需要`import java.util.TreeMap`
 + 如果需要加载配置文件`.props`，可选`Properties`，通过`new Properties()`创建实例，通过`load(Reader/InputStream)`加载文件，通过`getProperties() / setProperties()`读写，可设置默认值，通过`store(Writer/OutputStream, comments)`写入配置文件，使用时需要`import java.util.Properties`，同时`throws IOException`，字节流`InputStream/OutputStream`不能读写中文，而字符流`Reader/Writer`可以
 
-## Set
+### Set
 
 + `Set`通过`Map`实现，元素不会重复，包括`HashSet / TreeSet`等，`TreeSet`需要元素类实现`Comparable`接口或传入自定义比较算法`conparator`，需要`import java.util.Set/HashSet/TreeSet`
 + 通过`add()/ remove() / contains()`添加 / 删除 / 判断存在
 
-## Queue
+### Queue
 
 |                    | throw Exception | 返回false或null      |
 | :----------------- | :-------------- | -------------------- |
@@ -330,17 +389,17 @@
 + 优先队列可用`PriorityQueue`，通过`new PriorityQueue<E>(Comparator)`创建实例，`PriorityQueue`默认按元素比较的顺序排序（必须实现`Comparable`接口），也可以通过`Comparator`自定义排序算法
 + 双端队列可用`Deque`，允许两头进两头出，`Deque`是一个接口，它的实现类有`ArrayDeque`和`LinkedList`，通过`addLast() / addFirst() / offerLast() / offerFirst()`添加元素，通过`removeLast() / removeFirst() / pollLast() / pollFirst()`删除元素，通过`getLast() / getFirst() / peekLast() / peekFirst()`获取元素
 
-## Stack
+### Stack
 
 + 由于存在遗留类名叫`Stack`，出于兼容性考虑，没办法创建`Stack`接口，只能用`Deque`接口来模拟`Stack`
 + 只使用`push() / addFirst()`入栈，使用`pop() / removeFirst()`出栈，使用`peek() / peekFirst()`取栈顶元素
 
-## Iterator
+### Iterator
 
 + 自定义可迭代对象需要实现`Iterable<T>`接口，并覆写`public Iterator<T> iterator()`，其返回值需自定义类实现`Iterator<T>`接口，该自定义类需覆写`public boolean hasNext()`和`public T next()`
 + 只要实现了`Iterable<T>`接口，都能通过`for each`遍历
 
-## Collections
+### Collections
 
 | 方法              | 说明                                                         |
 | ----------------- | ------------------------------------------------------------ |
@@ -352,9 +411,9 @@
 | ``sort()`         | 只能传入可变`List`进行元素排序                               |
 | `shuffle()`       | 只能传入可变`List`进行洗牌打乱                               |
 
-# IO
+## IO
 
-## File
+### File
 
 + 通过`new File(pathname)`创建文件对象，可用相对路径和绝对路径
 
@@ -374,7 +433,7 @@
   | `mkdir() / mkdirs() / delete()`         | 创建目录，或在创建同时也创建必需的父目录，或删除空文件夹（必须为空） |
   | `length()`                              | 获取文件字节大小                                             |
 
-## InputStream/OutputStream
+### InputStream/OutputStream
 
 + `InputStream`就是Java标准库提供的最基本的输入流，位于`java.io`，提供了所有同步IO的功能，`InputStream`并不是一个接口，而是一个抽象类，它是所有输入流的超类，常用的有`FileInputStream / ByteArrayInputStream`
 + 通过``FileInputStream(filename) / ByteArrayInputStream(Byte[])`创建实例
@@ -383,7 +442,7 @@
 + `OutputStream`多种性质类似`InputStream`，可通过`void write() / void write(byte[])`，调用`close()`时自动清空缓冲区
 + 通过一个“基础”组件再叠加各种“附加”功能组件的模式，称之为Filter模式（或者装饰器模式：Decorator）。它可以让我们通过少量的类来实现各种功能的组合，可通过`extends FilterInputStream`等方式增加类的自定义功能
 
-## Reader/Writer
+### Reader/Writer
 
 + `Reader`是Java的IO库提供的另一个输入流接口，是一个字符流，以`char`为单位读取
 + `FileReader`子类需要额外指定编码方式`StandardCharsets.X`
@@ -393,22 +452,22 @@
 + `CharArrayWriter`行为类似`ByteArrayOutputStream`，类似的还有`FileWriter / StringReader`等
 + 通过`OutputStreamWriter(OutputStream, StandardCharsets.X)`能够把`OutputStream`转换为`Writer`
 
-## PrintStream/PrintWriter
+### PrintStream/PrintWriter
 
 + `PrintStream`和`OutputStream`相比，添加了一组`print()`/`println()`方法，可以打印各种数据类型，还会抛出`IOException`，编写代码时不必捕获`IOException`
 + `System.out`是标准输出，`System.err`是标准错误输出
 + `PrintWriter`扩展了`Writer`接口，它的`print()`/`println()`方法最终输出的是`char`数据，两者使用方法几乎一样
 
-## 序列化
+### 序列化
 
 + 对象要能序列化，必须实现一个特殊的`java.io.Serializable`空接口，称为“标记接口”（Marker Interface）
 + 通过`ObjectOutputStream(ByteArrayOutputStream)`将对象写入字节流，再通过`toByteArray()`写入文件
 + 通过`ObjectInputStream(ByteArrayInputStream)`将字节流写入对象，再通过`readObject()`转为对象
 + 序列化和反序列化不仅针对`Object`，也能针对基本数据类型
 
-# 日期与时间
+## 日期与时间
 
-## Date/Celendar/TimeZone
+### Date/Celendar/TimeZone
 
 三者均位于`java.util`，属于旧API，存在一些遗留问题，不建议使用
 
@@ -447,8 +506,7 @@
 
   + 通过`String[] TimeZone.getAvailableIDs()`可以列出系统支持的所有ID
 
-
-## LocalDateTime
+### LocalDateTime
 
 从`java 8`开始，`java.time`包提供了新的日期和时间 API，以及新的格式化类型`DateTimeFormatter`
 
@@ -460,7 +518,7 @@
 + 通过`isBefore() / isAfter()`方法可以判断两个日期时间的先后关系
 + `LocalDateTime`无法与时间戳进行转换
 
-## ZonedDateTime
+### ZonedDateTime
 
 + 可通过`ZonedDateTime.now()`获取系统默认时区的当前日期时间，也可以传入`ZoneId.of(String)`指定时区
 + 可通过`LocalDateTime`实例的`atZone(ZoneId.of(String))`方法获取指定时区的日期时间
@@ -469,20 +527,20 @@
 + 仍然有`plusX() / minusX() / getX() / withX()`等方法，操作类似`LocalX`
 + 输出格式为`yyyy-MM-ddTHH:mm:ss[[+/-]timezone][locale]`
 
-## DateTimeFormatter
+### DateTimeFormatter
 
 + 位于`java.time.format`
 + `DateTimeFormatter`不但是不变对象，它还是线程安全的
 + 通过`DateTimeFormatter.ofPattern(String)`创建实例，还可再传入`Locale.X`针对地区语言文字进行格式化
 + `DateTimeFormatter`内部预定义了一些常用的标准格式器
 
-## Instant
+### Instant
 
 + 通过`Instant.now() / Instant.ofEpochMillis() / Instant.ofEpochSecond()`获取时间戳
 + 通过`toEpochMilli() / getEpochSecond()`获得 毫秒 / 秒 精度的时间戳，`getNano()`获得仅纳秒时间戳
 + 通过`atZone(ZoneId)`指定时区后可以获得`ZonedDateTime`实例
 
-## Duration/Period
+### Duration/Period
 
 + `Duration`
   + 两个`LocalDateTime`之间差值用`Duration`表示
@@ -490,7 +548,7 @@
   + 可通过`ofX()`静态方法创建实例，其中`X`可以是`Days/Hours/Minutes/Seconds/Millis/Nanos`
   + 可通过`between()`静态方法传入两个`Temporal`对象创建实例或`from()`传入一个`TemporalAmount`对象创建实例
 
-## 转换
+### 转换
 
 ```java
 // Data -> ZonedDateTime
@@ -505,9 +563,9 @@ calendar.setTimeZone(TimeZone.getTimeZone(zdt.getZone().getId()));
 calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 ```
 
-# 正则表达式
+## 正则表达式
 
-##  匹配规则
+### 匹配规则
 
 | 正则表达式 | 规则                     | 正则表达式   | 规则             |
 | :--------- | :----------------------- | ------------ | ---------------- |
@@ -524,7 +582,7 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 | `[^A-F]`   | 指定范围外的任意字符     | `AB|CD|EF`   | AB或CD或EF       |
 | `?`        | 非贪婪匹配               |              |                  |
 
-## 相关方法
+### 相关方法
 
 需要`import java.util.regex.*`
 
@@ -538,14 +596,14 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 | `matcher.matches()`              | 判断是否匹配                                                 |
 | `matcher.group(int)`             | 获取分组匹配子串，`[0]`为字符串本身                          |
 
-# 多线程
+## 多线程
 
 + `new Thread(<? implements Runnable>) / new <? extends Thread>()`：需要正确覆写`void run()`方法，也可用`Lambda`表达式创建，也可通过`new Thread() { public void run() {...} }`创建
 + `Thread.sleep(ms)`：对当前线程暂停一段时间
 + `thread.start()`：开始线程，只能调用一次
 + `thread.join()`：当前线程等待该线程完成再继续执行后续代码
 + `thread.interrupt()`：中断线程，目标线程需要反复检测自身状态是否是interrupted状态，如果是，就结束运行
-+ `thread.setPriority(int) `：对线程设定优先级（1-10）， 默认值 5
++ `thread.setPriority(int)`：对线程设定优先级（1-10）， 默认值 5
 + `thread.setDaemon(boolean)`：设置目标线程为守护线程，守护线程不能持有任何需要关闭的资源，所有非守护线程都执行完毕后，无论有没有守护线程，虚拟机都会自动退出
 + `volatile`：作为修饰符，针对线程间共享的变量
 + `synchronized`：作为修饰符，表示整个方法都必须用`this`实例加锁，把整个方法变为同步代码块
@@ -554,17 +612,16 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 + `Object.notify() / Object.notifyAll()`：针对作为锁的对象，唤醒其他等待线程
 + `Executors.newFixedThreadPool(int)`：创建固定大小的线程池，属于`ExecutorService`类，需要`import java.util.concurrent.*`
 + `executorService.submit()`：传入线程到线程池，若传入的线程实现了`Callable`泛型接口，可返回`Future<V>`，调用`Future`对象的`get()`方法，就可以获得异步执行的结果，如果异步任务还没有完成，那么会阻塞至任务完成，可通过`isDone()`判断任务是否已完成，通过`cancel(ture)`取消当前任务，通过`get(long, TimeUnit)`也可以获取结果，但只等待指定的时间
-+ `executorService.shutdown() `：等待任务完成关闭线程池，`shutdownNow()`立即关闭，`awaitTermination()`则会等待指定的时间让线程池关闭
++ `executorService.shutdown()`：等待任务完成关闭线程池，`shutdownNow()`立即关闭，`awaitTermination()`则会等待指定的时间让线程池关闭
 + `Executors.newScheduledThreadPool(int)`：创建固定大小的定时执行的线程池，属于`ScheduledExecutorService`类
 + `scheduledExecutorService.schedule()`：传入一次性线程，可再传入时间长度和时间单位
 + `scheduledExecutorService.scheduleAtFixedRate()`：传入周期线程，可再传入延迟时间、时间长度和时间单位
 + `scheduledExecutorService.scheduleWithFixedDelay()`：传入等间隔线程，可再传入延迟时间、时间长度和时间单位
 + `CompletableFuture.supplyAsync()`：针对`Future`做了改进，可以传入回调对象，当异步任务完成或者发生异常时，自动调用回调对象的回调方法，返回`CompletableFuture<V>`，通过其`thenAccept() / exceptionally()`设置成功和失败对应的回调方法，`thenApplyAsync()`用于串行化另一个`CompletableFuture`，`anyOf()`和`allOf()`两个静态方法用于并行化多个`CompletableFuture`
 
+## 标准库
 
-# 标准库
-
-## String
+### String
 
 | 方法                                            | 说明                                               |
 | ----------------------------------------------- | -------------------------------------------------- |
@@ -584,7 +641,7 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 | `String.valueOf()`                              | 转换其他类型为字符串                               |
 | `X.parseX()`                                    | 转换字符串为其他类型                               |
 
-## StringBuilder
+### StringBuilder
 
 | 方法                      | 说明                                         |
 | ------------------------- | -------------------------------------------- |
@@ -595,7 +652,7 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 | `reverse()`               | 翻转字符串                                   |
 | `toString()`              | 转换为`String`对象                           |
 
-## StringJoiner
+### StringJoiner
 
 使用需要`import java.util.StringJoiner`
 
@@ -605,7 +662,7 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 | `add()`          | 在字符串后添加字符串，自动插入分隔符       |
 | `toString()`     | 转换为`String`对象                         |
 
-## BigInteger
+### BigInteger
 
 使用需要`import java.math.BigInteger`
 
@@ -613,7 +670,7 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 + 将`BigInteger`转换成基本类型时可使用`XValueExact()`等方法保证结果准确
 + 运算只能使用实例方法，如`add/multiply/divide/abs/pow/and/or/not/xor`等
 
-## BigDecimal
+### BigDecimal
 
 使用需要`import java.math.BigDecimal`
 
@@ -625,11 +682,11 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 + 做除法的同时求余数可用`divideAndRemainder()`，返回`BigDecimal[]`分别存储商数和余数
 + 比较`BigDecimal`的值是否相等，必须使用`compareTo()`而不能使用`equals()`，后者还要求精度相同
 
-## Math
+### Math
 
 常用的包括`pow/sqrt/exp/log/log10/sin/cos/tan/asin/acos/atan/abs/max/min/PI/E/random`等
 
-## Random/SecureRandom
+### Random/SecureRandom
 
 使用需要`import java.util.Random`或`import java.security.SecureRandom`
 
@@ -637,7 +694,7 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 + `Random`用来创建伪随机数，只要给定一个初始的种子，产生的随机数序列是完全一样的
 + `SecureRandom`的安全性是通过操作系统提供的安全的随机种子来生成随机数。这个种子是通过CPU的热噪声、读写磁盘的字节、网络流量等各种随机事件产生的“熵”
 
-## 包装类型
+### 包装类型
 
 + 通过`new X(val)`或`X.valueOf(val)`进行初始化
 + 通过`Xvalue()`方法获得对应基础数据类型值
@@ -660,7 +717,7 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 | `double`  | `java.lang.Double`    |
 | `char`    | `java.lang.Character` |
 
-## 枚举类
+### 枚举类
 
 + Java使用`enum`定义枚举类型，它被编译器编译为`final class [枚举类名] extends Enum { … }`
 + 通过`name()`获取常量定义的字符串，注意不要使用`toString()`
@@ -670,18 +727,17 @@ calendar.setTimeInMillis(zdt.toEpochSecond() * 1000);
 + 为了可视化可以`@Override`其`toString()`方法
 + `enum`适合用在`switch`语句中
 
-# API
+## API
 
-## `java.util.Arrays`
+### `java.util.Arrays`
 
 | 函数                 | 作用                         |
 | -------------------- | ---------------------------- |
 | `toString(type[] v)` | 将数组转为字符串以便输出     |
 | `sort(type[] v)`     | 对数组进行默认从小到大的排序 |
 
-## `java.util.Scanner`
+### `java.util.Scanner`
 
 | 函数                | 作用                                                         |
 | ------------------- | ------------------------------------------------------------ |
 | `Scanner(stream s)` | 绑定输入流从而通过控制台获取输入，实例有`nextType()`类型的方法，其中`next()`和`nextLine()`的后者能够读取空格，而前者不行 |
-

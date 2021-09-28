@@ -392,6 +392,20 @@ obj = nil; // 等价于 [obj release]; obj = [nil retain];
 
 #### NSMutableDictionary
 
+- 创建
+
+  指定容量：`[NSMutableDictionary dictionaryWithCapacity: capacity]`
+
+- 添加
+
+  - 添加单元素：`[mdict setObject: obj forKey: key]`
+  - 添加多元素：`[mdict addEntriesFromDictionary: dict]`
+
+- 删除
+
+  - 删除单元素：`[mdict removeObjectForKey: key]`
+  - 删除所有元素：`[mdict removeAllObjects]`
+
 #### NSIndexSet
 
 - 创建

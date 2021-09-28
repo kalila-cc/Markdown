@@ -338,7 +338,7 @@ obj = nil; // 等价于 [obj release]; obj = [nil retain];
   - 无键值对：`[NSDictionary dictionary]`
   - 单键值对：`[NSDictionary dictionaryWithObject: value forKey: key]`
   - 多键值对：`[NSDictionary dictionaryWithObjects: values forKeys: keys]`，`[[NSDictionary  alloc] initWithObjects: values forKeys: keys count: count]`，`[[NSDictionary  alloc] initWithObjectsAndKeys: value, key, ..., nil]`
-  - 从字典：`[NSDictionary dictionaryWithDictionary]`
+  - 从字典：`[NSDictionary dictionaryWithDictionary: dict]`
   - 从文件：`[[NSDictionary alloc] initWithContentsOfFile: filePath]`
 - 查询
   - 获取长度：`[dict count]`
